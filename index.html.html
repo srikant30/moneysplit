@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MONEY-SPLIT - Buddy Tracker v7</title>
+    <style>
+        :root {
+            --primary: #005696;
+            --secondary: #10ac84;
+            --danger: #ee5253;
+            --warning: #ff9f43;
+            --bg: #f4f7fa;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-light: #636e72;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: auto; }
+        .header { display: flex; align-items: center; justify-content: space-between; background: var(--card-bg); padding: 15px 30px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 25px; }
+        .logo-area img { height: 50px; width: auto; display: block; }
+        .app-title { font-size: 22px; font-weight: bold; color: var(--primary); }
+        .layout { display: grid; grid-template-columns: 350px 1fr; gap: 25px; }
+        @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+        .card { background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 25px; border: 1px solid #f0f0f0; }
+        h2 { font-size: 18px; color: var(--primary); margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid #f1f2f6; padding-bottom: 10px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-light); }
+        input, select { width: 100%; padding: 12px; border: 1px solid #dfe6e9; border-radius: 8px; font-size: 14px; box-sizing: border-box; transition: 0.2s; }
+        input:focus { border-color: var(--primary); outline: none; background: #fcfdfe; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #00447a; }
+        .btn-secondary { background: #f1f2f6; color: var(--primary); margin-top: 10px; }
+        .btn-reset { background: #ffeaa7; color: #d35400; width: auto; padding: 6px 15px; font-size: 12px; }
+        .buddy-tag { display: inline-flex; align-items: center; background: #e1f5fe; padding: 6px 12px; border-radius: 20px; margin: 4px; font-size: 13px; font-weight: 500; }
+        .remove-buddy { margin-left: 8px; color: var(--danger); cursor: pointer; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; font-size: 11px; color: var(--text-light); padding: 12px; border-bottom: 2px solid #f1f2f6; text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid #f1f2f6; font-size: 13px; }
+        .stat-box { background: #f8fafc; padding: 15px; border-radius: 10px; text-align: center; }
+        .stat-val { display: block; font-size: 20px; font-weight: bold; color: var(--primary); }
+        .stat-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; }
+        .settlement-card { background: #fff9db; border: 1px solid #f5e79e; padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; flex-direction: column; }
+        .amt-pill { align-self: flex-end; background: var(--primary); color: white; padding: 4px 10px; border-radius: 6px; font-weight: bold; margin-top: 5px; }
+        .negative { color: var(--danger); font-weight: bold; }
+        .positive { color: var(--secondary); font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo-area"><img src="file:///C:/Users/shcmhp4997/Downloads/stockholding-logo.jpg" alt="Logo"></div>
+        <div class="app-title">MONEY-SPLIT</div>
+        <button class="btn-reset" onclick="resetAll()">Reset Data</button>
+    </div>
+    <div class="layout">
+        <div class="side">
+            <div class="card">
+                <h2>👥 BUDDY NAMES</h2>
+                <div class="input-group">
+                    <input type="text" id="buddyInput" placeholder="Add a buddy..." onkeypress="if(event.key==='Enter')addBuddy()">
+                    <button class="btn btn-secondary" onclick="addBuddy()">Add to Group</button>
+                </div>
+                <div id="buddyList"></div>
+            </div>
+            <div class="card">
+                <h2>📊 LIVE BALANCES</h2>
+                <div id="balanceTableContainer"></div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:20px;">
+                    <div class="stat-box"><span class="stat-label">Total Group</span><span id="totalText" class="stat-val">₹0</span></div>
+                    <div class="stat-box"><span class="stat-label">Per Buddy</span><span id="perHeadText" class="stat-val">₹0</span></div>
+                </div>
+            </div>
+            <div class="card">
+                <h2>🤝 SETTLEMENT</h2>
+                <div id="settlementPlan"></div>
+            </div>
+        </div>
+        <div class="main">
+            <div class="card">
+                <h2>💸 RECORD EXPENSE</h2>
+                <!-- Date, Item, Amount, and Payer now in 4 columns -->
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:12px;">
+                    <div class="input-group">
+                        <label>Date</label>
+                        <input type="date" id="expDate">
+                    </div>
+                    <div class="input-group">
+                        <label>Item / Activity</label>
+                        <input type="text" id="expDesc" placeholder="e.g. Lunch">
+                    </div>
+                    <div class="input-group">
+                        <label>Amount (₹)</label>
+                        <input type="number" id="expAmt" placeholder="0.00">
+                    </div>
+                    <div class="input-group">
+                        <label>Paid By</label>
+                        <select id="expPayer"></select>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="addExpense()">Add Expense</button>
+            </div>
+            <div class="card">
+                <h2>📝 HISTORY</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Date</th>
+                            <th>Item</th>
+                            <th>Buddy</th>
+                            <th>Amount</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="expHistory"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let buddies = []; let expenses = [];
+
+    document.getElementById('expDate').valueAsDate = new Date();
+
+    function formatDate(dateStr) {
+        if (!dateStr) return "";
+        const date = new Date(dateStr);
+        const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        const d = String(date.getDate()).padStart(2, '0');
+        const m = months[date.getMonth()];
+        const y = String(date.getFullYear()).slice(-2);
+        return `${d}-${m}-${y}`;
+    }
+
+    function addBuddy() {
+        const input = document.getElementById('buddyInput'); const name = input.value.trim();
+        if (name && !buddies.includes(name)) { buddies.push(name); input.value = ''; updateUI(); }
+    }
+    function removeBuddy(idx) {
+        if(confirm('Remove buddy and their expenses?')) {
+            const name = buddies[idx]; buddies.splice(idx, 1);
+            expenses = expenses.filter(e => e.payer !== name); updateUI();
+        }
+    }
+    function addExpense() {
+        const dateInput = document.getElementById('expDate').value;
+        const d = document.getElementById('expDesc').value; 
+        const a = parseFloat(document.getElementById('expAmt').value);
+        const p = document.getElementById('expPayer').value;
+        if(dateInput && d && a > 0 && p) {
+            expenses.push({ id: Date.now(), date: dateInput, desc: d, amt: a, payer: p });
+            document.getElementById('expDesc').value = ''; 
+            document.getElementById('expAmt').value = ''; 
+            updateUI();
+        } else { alert('Please ensure Date, Description, Amount and Payer are filled.'); }
+    }
+    function delExpense(id) { expenses = expenses.filter(e => e.id !== id); updateUI(); }
+    function updateUI() {
+        document.getElementById('buddyList').innerHTML = buddies.map((b, i) => `<div class="buddy-tag">${b}<span class="remove-buddy" onclick="removeBuddy(${i})">×</span></div>`).join('');
+        const sel = document.getElementById('expPayer');
+        sel.innerHTML = '<option value="" disabled selected>Select</option>' + buddies.map(b => `<option value="${b}">${b}</option>`).join('');
+        
+        // Render History with Serial Number
+        document.getElementById('expHistory').innerHTML = expenses.map((e, index) => `
+            <tr>
+                <td>${index + 1}</td>
+                <td><small>${formatDate(e.date)}</small></td>
+                <td>${e.desc}</td>
+                <td>${e.payer}</td>
+                <td>₹${e.amt.toFixed(2)}</td>
+                <td style="text-align:right;"><span class="remove-buddy" onclick="delExpense(${e.id})">×</span></td>
+            </tr>
+        `).join('');
+        calculate();
+    }
+    function calculate() {
+        const total = expenses.reduce((s, e) => s + e.amt, 0); const perHead = buddies.length ? total / buddies.length : 0;
+        document.getElementById('totalText').innerText = '₹' + total.toFixed(0); document.getElementById('perHeadText').innerText = '₹' + perHead.toFixed(0);
+        const summary = buddies.map(b => {
+            const paid = expenses.filter(e => e.payer === b).reduce((s, e) => s + e.amt, 0);
+            return { name: b, net: paid - perHead };
+        });
+        let bHtml = '<table>';
+        summary.forEach(s => { bHtml += `<tr><td>${s.name}</td><td class="${s.net >= 0 ? 'positive' : 'negative'}">${s.net >= 0 ? '+' : ''}₹${s.net.toFixed(2)}</td></tr>`; });
+        document.getElementById('balanceTableContainer').innerHTML = bHtml + '</table>';
+        let debtors = summary.filter(s => s.net < -0.01).sort((a,b) => a.net - b.net);
+        let creditors = summary.filter(s => s.net > 0.01).sort((a,b) => b.net - a.net);
+        let sHtml = ''; let i = 0, j = 0;
+        while(i < debtors.length && j < creditors.length) {
+            let pay = Math.min(Math.abs(debtors[i].net), creditors[j].net);
+            sHtml += `<div class="settlement-card"><span><b>${debtors[i].name}</b> pays <b>${creditors[j].name}</b></span><span class="amt-pill">₹${pay.toFixed(2)}</span></div>`;
+            debtors[i].net += pay; creditors[j].net -= pay;
+            if(Math.abs(debtors[i].net) < 0.01) i++;
+            if(Math.abs(creditors[j].net) < 0.01) j++;
+        }
+        document.getElementById('settlementPlan').innerHTML = sHtml || '<p style="color:#999;font-style:italic">No settlements needed</p>';
+    }
+    function resetAll() { if(confirm('Clear all buddies and expenses?')) { buddies = []; expenses = []; updateUI(); } }
+</script>
+</body>
+</html>
