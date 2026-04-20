@@ -1,10 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MONEY-SPLIT - Buddy Tracker v7</title>
+    <title>MoneySplit - Buddy Tracker v9</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
         :root {
             --primary: #005696;
@@ -24,22 +25,25 @@
         .app-title { font-size: 22px; font-weight: bold; color: var(--primary); }
         .layout { display: grid; grid-template-columns: 350px 1fr; gap: 25px; }
         @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
-        .card { background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 25px; border: 1px solid #f0f0f0; }
+        .card { background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 25px; border: 1px solid #f0f0f0; position: relative; }
         h2 { font-size: 18px; color: var(--primary); margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid #f1f2f6; padding-bottom: 10px; }
         .input-group { margin-bottom: 15px; }
         label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-light); }
-        input, select { width: 100%; padding: 12px; border: 1px solid #dfe6e9; border-radius: 8px; font-size: 14px; box-sizing: border-box; transition: 0.2s; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #dfe6e9; border-radius: 8px; font-size: 14px; box-sizing: border-box; transition: 0.2s; text-transform: uppercase; }
+        input::placeholder { text-transform: none; }
         input:focus { border-color: var(--primary); outline: none; background: #fcfdfe; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-primary:hover { background: #00447a; }
         .btn-secondary { background: #f1f2f6; color: var(--primary); margin-top: 10px; }
         .btn-reset { background: #ffeaa7; color: #d35400; width: auto; padding: 6px 15px; font-size: 12px; }
-        .buddy-tag { display: inline-flex; align-items: center; background: #e1f5fe; padding: 6px 12px; border-radius: 20px; margin: 4px; font-size: 13px; font-weight: 500; }
+        .btn-pdf { background: #e8f4fd; color: var(--primary); border: 1px solid var(--primary); width: auto; padding: 8px 15px; font-size: 12px; position: absolute; right: 25px; top: 22px; }
+        .btn-pdf:hover { background: var(--primary); color: white; }
+        .buddy-tag { display: inline-flex; align-items: center; background: #e1f5fe; padding: 6px 12px; border-radius: 20px; margin: 4px; font-size: 13px; font-weight: 500; text-transform: uppercase; }
         .remove-buddy { margin-left: 8px; color: var(--danger); cursor: pointer; font-weight: bold; }
         table { width: 100%; border-collapse: collapse; }
         th { text-align: left; font-size: 11px; color: var(--text-light); padding: 12px; border-bottom: 2px solid #f1f2f6; text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid #f1f2f6; font-size: 13px; }
+        td { padding: 12px; border-bottom: 1px solid #f1f2f6; font-size: 13px; text-transform: uppercase; }
         .stat-box { background: #f8fafc; padding: 15px; border-radius: 10px; text-align: center; }
         .stat-val { display: block; font-size: 20px; font-weight: bold; color: var(--primary); }
         .stat-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; }
@@ -52,22 +56,21 @@
 <body>
 <div class="container">
     <div class="header">
-        <div class="logo-area"><img src="file:///C:/Users/shcmhp4997/Downloads/stockholding-logo.jpg" alt="Logo"></div>
-        <div class="app-title">MONEY-SPLIT</div>
+        <div class="app-title">MoneySplit</div>
         <button class="btn-reset" onclick="resetAll()">Reset Data</button>
     </div>
     <div class="layout">
         <div class="side">
             <div class="card">
-                <h2>👥 BUDDY NAMES</h2>
+                <h2>👤 Buddy Names</h2>
                 <div class="input-group">
-                    <input type="text" id="buddyInput" placeholder="Add a buddy..." onkeypress="if(event.key==='Enter')addBuddy()">
+                    <input type="text" id="buddyInput" placeholder="Enter name and press Add" onkeypress="if(event.key==='Enter')addBuddy()">
                     <button class="btn btn-secondary" onclick="addBuddy()">Add to Group</button>
                 </div>
                 <div id="buddyList"></div>
             </div>
             <div class="card">
-                <h2>📊 LIVE BALANCES</h2>
+                <h2>📊 Live Balances</h2>
                 <div id="balanceTableContainer"></div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:20px;">
                     <div class="stat-box"><span class="stat-label">Total Group</span><span id="totalText" class="stat-val">₹0</span></div>
@@ -75,43 +78,31 @@
                 </div>
             </div>
             <div class="card">
-                <h2>🤝 SETTLEMENT</h2>
+                <h2>🤝 Settlement Plan</h2>
+                <button class="btn btn-pdf" onclick="exportPDF()">Download PDF</button>
                 <div id="settlementPlan"></div>
             </div>
         </div>
         <div class="main">
             <div class="card">
-                <h2>💸 RECORD EXPENSE</h2>
-                <!-- Date, Item, Amount, and Payer now in 4 columns -->
-                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:12px;">
-                    <div class="input-group">
-                        <label>Date</label>
-                        <input type="date" id="expDate">
-                    </div>
-                    <div class="input-group">
-                        <label>Item / Activity</label>
-                        <input type="text" id="expDesc" placeholder="e.g. Lunch">
-                    </div>
-                    <div class="input-group">
-                        <label>Amount (₹)</label>
-                        <input type="number" id="expAmt" placeholder="0.00">
-                    </div>
-                    <div class="input-group">
-                        <label>Paid By</label>
-                        <select id="expPayer"></select>
-                    </div>
+                <h2>💸 Record Expense</h2>
+                <div style="display:grid; grid-template-columns: 1fr 1.5fr 1fr 1fr; gap:12px;">
+                    <div class="input-group"><label>Date</label><input type="date" id="expDate"></div>
+                    <div class="input-group"><label>Item</label><input type="text" id="expDesc" placeholder="e.g. Lunch"></div>
+                    <div class="input-group"><label>Amount (₹)</label><input type="number" id="expAmt" placeholder="0.00"></div>
+                    <div class="input-group"><label>Paid By</label><select id="expPayer"></select></div>
                 </div>
                 <button class="btn btn-primary" onclick="addExpense()">Add Expense</button>
             </div>
             <div class="card">
-                <h2>📝 HISTORY</h2>
+                <h2>📝 History</h2>
                 <table>
                     <thead>
                         <tr>
                             <th>S.No</th>
                             <th>Date</th>
                             <th>Item</th>
-                            <th>Buddy</th>
+                            <th>Name</th>
                             <th>Amount</th>
                             <th></th>
                         </tr>
@@ -124,7 +115,6 @@
 </div>
 <script>
     let buddies = []; let expenses = [];
-
     document.getElementById('expDate').valueAsDate = new Date();
 
     function formatDate(dateStr) {
@@ -138,34 +128,33 @@
     }
 
     function addBuddy() {
-        const input = document.getElementById('buddyInput'); const name = input.value.trim();
+        const input = document.getElementById('buddyInput'); 
+        const name = input.value.trim().toUpperCase();
         if (name && !buddies.includes(name)) { buddies.push(name); input.value = ''; updateUI(); }
     }
     function removeBuddy(idx) {
-        if(confirm('Remove buddy and their expenses?')) {
+        if(confirm('Remove buddy?')) {
             const name = buddies[idx]; buddies.splice(idx, 1);
             expenses = expenses.filter(e => e.payer !== name); updateUI();
         }
     }
     function addExpense() {
-        const dateInput = document.getElementById('expDate').value;
-        const d = document.getElementById('expDesc').value; 
+        const date = document.getElementById('expDate').value;
+        const d = document.getElementById('expDesc').value.toUpperCase(); 
         const a = parseFloat(document.getElementById('expAmt').value);
-        const p = document.getElementById('expPayer').value;
-        if(dateInput && d && a > 0 && p) {
-            expenses.push({ id: Date.now(), date: dateInput, desc: d, amt: a, payer: p });
+        const p = document.getElementById('expPayer').value.toUpperCase();
+        if(date && d && a > 0 && p) {
+            expenses.push({ id: Date.now(), date: date, desc: d, amt: a, payer: p });
             document.getElementById('expDesc').value = ''; 
             document.getElementById('expAmt').value = ''; 
             updateUI();
-        } else { alert('Please ensure Date, Description, Amount and Payer are filled.'); }
+        } else { alert('Fill all fields.'); }
     }
     function delExpense(id) { expenses = expenses.filter(e => e.id !== id); updateUI(); }
     function updateUI() {
         document.getElementById('buddyList').innerHTML = buddies.map((b, i) => `<div class="buddy-tag">${b}<span class="remove-buddy" onclick="removeBuddy(${i})">×</span></div>`).join('');
         const sel = document.getElementById('expPayer');
         sel.innerHTML = '<option value="" disabled selected>Select</option>' + buddies.map(b => `<option value="${b}">${b}</option>`).join('');
-        
-        // Render History with Serial Number
         document.getElementById('expHistory').innerHTML = expenses.map((e, index) => `
             <tr>
                 <td>${index + 1}</td>
@@ -200,7 +189,66 @@
         }
         document.getElementById('settlementPlan').innerHTML = sHtml || '<p style="color:#999;font-style:italic">No settlements needed</p>';
     }
-    function resetAll() { if(confirm('Clear all buddies and expenses?')) { buddies = []; expenses = []; updateUI(); } }
+
+    function exportPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.setFontSize(18);
+        doc.text("MoneySplit Settlement Report", 14, 20);
+        doc.setFontSize(10);
+        doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 28);
+
+        // Section 1: Expense Details
+        doc.setFontSize(14);
+        doc.text("Expense Details", 14, 40);
+        const tableData = expenses.map((e, i) => [i + 1, formatDate(e.date), e.desc, e.payer, `Rs. ${e.amt.toFixed(2)}`]);
+        doc.autoTable({
+            startY: 45,
+            head: [['S.No', 'Date', 'Item', 'Name', 'Amount']],
+            body: tableData,
+            styles: { cellPadding: 3, fontSize: 9, valign: 'middle' },
+            headStyles: { fillColor: [0, 86, 150] },
+        });
+
+        // Section 2: Settlement Plan
+        const finalY = doc.lastAutoTable.finalY + 15;
+        doc.text("Settlement Plan", 14, finalY);
+        
+        let settleData = [];
+        const total = expenses.reduce((s, e) => s + e.amt, 0);
+        const perHead = buddies.length ? total / buddies.length : 0;
+        const summary = buddies.map(b => {
+            const paid = expenses.filter(e => e.payer === b).reduce((s, e) => s + e.amt, 0);
+            return { name: b, net: paid - perHead };
+        });
+        let debtors = summary.filter(s => s.net < -0.01).sort((a,b) => a.net - b.net);
+        let creditors = summary.filter(s => s.net > 0.01).sort((a,b) => b.net - a.net);
+        let i = 0, j = 0;
+        while(i < debtors.length && j < creditors.length) {
+            let pay = Math.min(Math.abs(debtors[i].net), creditors[j].net);
+            settleData.push([debtors[i].name, creditors[j].name, `Rs. ${pay.toFixed(2)}`]);
+            debtors[i].net += pay; creditors[j].net -= pay;
+            if(Math.abs(debtors[i].net) < 0.01) i++;
+            if(Math.abs(creditors[j].net) < 0.01) j++;
+        }
+
+        if (settleData.length > 0) {
+            doc.autoTable({
+                startY: finalY + 5,
+                head: [['From', 'To', 'Amount']],
+                body: settleData,
+                styles: { cellPadding: 3, fontSize: 9 },
+                headStyles: { fillColor: [16, 172, 132] },
+            });
+        } else {
+            doc.text("All balances settled. No payments required.", 14, finalY + 10);
+        }
+
+        doc.save("MoneySplit_Report.pdf");
+    }
+
+    function resetAll() { if(confirm('Clear all?')) { buddies = []; expenses = []; updateUI(); } }
 </script>
 </body>
 </html>
