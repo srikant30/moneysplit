@@ -20,34 +20,48 @@
         }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding: 20px; }
         .container { max-width: 1100px; margin: auto; }
-        .header { display: flex; align-items: center; justify-content: space-between; background: var(--card-bg); padding: 15px 30px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 25px; }
-        .logo-area img { height: 50px; width: auto; display: block; }
-        .app-title { font-size: 22px; font-weight: bold; color: var(--primary); }
+        
+        .header { display: flex; align-items: center; justify-content: center; background: var(--card-bg); padding: 15px 30px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 25px; position: relative; }
+        .app-title { font-size: 22px; font-weight: bold; color: var(--primary); text-transform: uppercase; }
+        
+        .btn-reset { background: var(--danger); color: white; width: auto; padding: 8px 15px; font-size: 12px; position: absolute; right: 30px; border: none; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-weight: bold; }
+        
         .layout { display: grid; grid-template-columns: 350px 1fr; gap: 25px; }
         @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
         .card { background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 25px; border: 1px solid #f0f0f0; position: relative; }
-        h2 { font-size: 18px; color: var(--primary); margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid #f1f2f6; padding-bottom: 10px; }
+        
+        h2 { font-size: 18px; color: var(--primary); margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid #f1f2f6; padding-bottom: 10px; text-transform: uppercase; }
+        
         .input-group { margin-bottom: 15px; }
-        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-light); }
+        
+        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-light); text-transform: uppercase; text-align: center; }
+        
         input, select { width: 100%; padding: 12px; border: 1px solid #dfe6e9; border-radius: 8px; font-size: 14px; box-sizing: border-box; transition: 0.2s; text-transform: uppercase; }
-        input::placeholder { text-transform: none; }
-        input:focus { border-color: var(--primary); outline: none; background: #fcfdfe; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: #00447a; }
-        .btn-secondary { background: #f1f2f6; color: var(--primary); margin-top: 10px; }
-        .btn-reset { background: #ffeaa7; color: #d35400; width: auto; padding: 6px 15px; font-size: 12px; }
-        .btn-pdf { background: #e8f4fd; color: var(--primary); border: 1px solid var(--primary); width: auto; padding: 8px 15px; font-size: 12px; position: absolute; right: 25px; top: 22px; }
+        
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; }
+        
+        .btn-primary, .btn-secondary { background: var(--primary); color: white; }
+        .btn-primary:hover, .btn-secondary:hover { background: #00447a; }
+        
+        /* Fixed: PDF button positioning to prevent overlap */
+        .btn-pdf { background: #e8f4fd; color: var(--primary); border: 1px solid var(--primary); width: auto; padding: 8px 15px; font-size: 12px; position: absolute; right: 25px; top: 18px; text-transform: uppercase; font-weight: bold; border-radius: 8px; cursor: pointer; }
         .btn-pdf:hover { background: var(--primary); color: white; }
+        
+        /* Fixed: Settlement Plan section spacing */
+        #settlementPlan { margin-top: 25px; }
+
         .buddy-tag { display: inline-flex; align-items: center; background: #e1f5fe; padding: 6px 12px; border-radius: 20px; margin: 4px; font-size: 13px; font-weight: 500; text-transform: uppercase; }
         .remove-buddy { margin-left: 8px; color: var(--danger); cursor: pointer; font-weight: bold; }
+        
         table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; font-size: 11px; color: var(--text-light); padding: 12px; border-bottom: 2px solid #f1f2f6; text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid #f1f2f6; font-size: 13px; text-transform: uppercase; }
+        
+        th { text-align: center; font-size: 11px; color: var(--text-light); padding: 12px; border-bottom: 2px solid #f1f2f6; text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid #f1f2f6; font-size: 13px; text-transform: uppercase; text-align: center; }
+        
         .stat-box { background: #f8fafc; padding: 15px; border-radius: 10px; text-align: center; }
         .stat-val { display: block; font-size: 20px; font-weight: bold; color: var(--primary); }
         .stat-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; }
-        .settlement-card { background: #fff9db; border: 1px solid #f5e79e; padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; flex-direction: column; }
+        .settlement-card { background: #fff9db; border: 1px solid #f5e79e; padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; flex-direction: column; text-transform: uppercase; }
         .amt-pill { align-self: flex-end; background: var(--primary); color: white; padding: 4px 10px; border-radius: 6px; font-weight: bold; margin-top: 5px; }
         .negative { color: var(--danger); font-weight: bold; }
         .positive { color: var(--secondary); font-weight: bold; }
@@ -64,8 +78,9 @@
             <div class="card">
                 <h2>👤 Buddy Names</h2>
                 <div class="input-group">
-                    <input type="text" id="buddyInput" placeholder="Enter name and press Add" onkeypress="if(event.key==='Enter')addBuddy()">
-                    <button class="btn btn-secondary" onclick="addBuddy()">Add to Group</button>
+                    <label>Enter Name</label>
+                    <input type="text" id="buddyInput" placeholder="Enter name" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" onkeypress="if(event.key==='Enter')addBuddy()">
+                    <button class="btn btn-secondary" style="margin-top:10px;" onclick="addBuddy()">Add to Group</button>
                 </div>
                 <div id="buddyList"></div>
             </div>
@@ -79,7 +94,7 @@
             </div>
             <div class="card">
                 <h2>🤝 Settlement Plan</h2>
-                <button class="btn btn-pdf" onclick="exportPDF()">Download PDF</button>
+                <button class="btn-pdf" onclick="exportPDF()">PDF</button>
                 <div id="settlementPlan"></div>
             </div>
         </div>
@@ -88,8 +103,8 @@
                 <h2>💸 Record Expense</h2>
                 <div style="display:grid; grid-template-columns: 1fr 1.5fr 1fr 1fr; gap:12px;">
                     <div class="input-group"><label>Date</label><input type="date" id="expDate"></div>
-                    <div class="input-group"><label>Item</label><input type="text" id="expDesc" placeholder="e.g. Lunch"></div>
-                    <div class="input-group"><label>Amount (₹)</label><input type="number" id="expAmt" placeholder="0.00"></div>
+                    <div class="input-group"><label>Item</label><input type="text" id="expDesc" placeholder="e.g. Lunch" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"></div>
+                    <div class="input-group"><label>Amount (₹)</label><input type="text" id="expAmt" placeholder="0.00" oninput="this.value = this.value.replace(/[^0-9.]/g, '')"></div>
                     <div class="input-group"><label>Paid By</label><select id="expPayer"></select></div>
                 </div>
                 <button class="btn btn-primary" onclick="addExpense()">Add Expense</button>
@@ -114,30 +129,36 @@
     </div>
 </div>
 <script>
-    let buddies = []; let expenses = [];
+    let buddies = JSON.parse(localStorage.getItem('ms_buddies')) || []; 
+    let expenses = JSON.parse(localStorage.getItem('ms_expenses')) || [];
     document.getElementById('expDate').valueAsDate = new Date();
 
     function formatDate(dateStr) {
         if (!dateStr) return "";
         const date = new Date(dateStr);
-        const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
         const d = String(date.getDate()).padStart(2, '0');
-        const m = months[date.getMonth()];
-        const y = String(date.getFullYear()).slice(-2);
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const y = date.getFullYear();
         return `${d}-${m}-${y}`;
     }
 
     function addBuddy() {
         const input = document.getElementById('buddyInput'); 
         const name = input.value.trim().toUpperCase();
-        if (name && !buddies.includes(name)) { buddies.push(name); input.value = ''; updateUI(); }
-    }
-    function removeBuddy(idx) {
-        if(confirm('Remove buddy?')) {
-            const name = buddies[idx]; buddies.splice(idx, 1);
-            expenses = expenses.filter(e => e.payer !== name); updateUI();
+        if (name && !buddies.includes(name)) { 
+            buddies.push(name); 
+            input.value = ''; 
+            saveAndUI(); 
         }
     }
+
+    function removeBuddy(idx) {
+        if(confirm('REMOVE THIS BUDDY AND THEIR EXPENSES?')) {
+            const name = buddies[idx]; buddies.splice(idx, 1);
+            expenses = expenses.filter(e => e.payer !== name); saveAndUI();
+        }
+    }
+
     function addExpense() {
         const date = document.getElementById('expDate').value;
         const d = document.getElementById('expDesc').value.toUpperCase(); 
@@ -147,18 +168,26 @@
             expenses.push({ id: Date.now(), date: date, desc: d, amt: a, payer: p });
             document.getElementById('expDesc').value = ''; 
             document.getElementById('expAmt').value = ''; 
-            updateUI();
-        } else { alert('Fill all fields.'); }
+            saveAndUI();
+        } else { alert('PLEASE FILL ALL FIELDS CORRECTLY.'); }
     }
-    function delExpense(id) { expenses = expenses.filter(e => e.id !== id); updateUI(); }
+
+    function delExpense(id) { expenses = expenses.filter(e => e.id !== id); saveAndUI(); }
+
+    function saveAndUI() {
+        localStorage.setItem('ms_buddies', JSON.stringify(buddies));
+        localStorage.setItem('ms_expenses', JSON.stringify(expenses));
+        updateUI();
+    }
+
     function updateUI() {
         document.getElementById('buddyList').innerHTML = buddies.map((b, i) => `<div class="buddy-tag">${b}<span class="remove-buddy" onclick="removeBuddy(${i})">×</span></div>`).join('');
         const sel = document.getElementById('expPayer');
-        sel.innerHTML = '<option value="" disabled selected>Select</option>' + buddies.map(b => `<option value="${b}">${b}</option>`).join('');
+        sel.innerHTML = '<option value="" disabled selected>SELECT</option>' + buddies.map(b => `<option value="${b}">${b}</option>`).join('');
         document.getElementById('expHistory').innerHTML = expenses.map((e, index) => `
             <tr>
                 <td>${index + 1}</td>
-                <td><small>${formatDate(e.date)}</small></td>
+                <td>${formatDate(e.date)}</td>
                 <td>${e.desc}</td>
                 <td>${e.payer}</td>
                 <td>₹${e.amt.toFixed(2)}</td>
@@ -167,6 +196,7 @@
         `).join('');
         calculate();
     }
+
     function calculate() {
         const total = expenses.reduce((s, e) => s + e.amt, 0); const perHead = buddies.length ? total / buddies.length : 0;
         document.getElementById('totalText').innerText = '₹' + total.toFixed(0); document.getElementById('perHeadText').innerText = '₹' + perHead.toFixed(0);
@@ -182,38 +212,38 @@
         let sHtml = ''; let i = 0, j = 0;
         while(i < debtors.length && j < creditors.length) {
             let pay = Math.min(Math.abs(debtors[i].net), creditors[j].net);
-            sHtml += `<div class="settlement-card"><span><b>${debtors[i].name}</b> pays <b>${creditors[j].name}</b></span><span class="amt-pill">₹${pay.toFixed(2)}</span></div>`;
+            sHtml += `<div class="settlement-card"><span><b>${debtors[i].name}</b> PAYS <b>${creditors[j].name}</b></span><span class="amt-pill">₹${pay.toFixed(2)}</span></div>`;
             debtors[i].net += pay; creditors[j].net -= pay;
             if(Math.abs(debtors[i].net) < 0.01) i++;
             if(Math.abs(creditors[j].net) < 0.01) j++;
         }
-        document.getElementById('settlementPlan').innerHTML = sHtml || '<p style="color:#999;font-style:italic">No settlements needed</p>';
+        document.getElementById('settlementPlan').innerHTML = sHtml || '<p style="color:#999;font-style:italic">NO SETTLEMENTS NEEDED</p>';
     }
 
     function exportPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        
-        doc.setFontSize(18);
-        doc.text("MoneySplit Settlement Report", 14, 20);
-        doc.setFontSize(10);
-        doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 28);
+        const now = new Date();
+        const dateStr = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()}`;
 
-        // Section 1: Expense Details
+        doc.setFontSize(18);
+        doc.text("MONEYSPLIT SETTLEMENT REPORT", 105, 20, { align: 'center' });
+        doc.setFontSize(10);
+        doc.text(`GENERATED ON: ${dateStr}`, 105, 28, { align: 'center' });
+
         doc.setFontSize(14);
-        doc.text("Expense Details", 14, 40);
-        const tableData = expenses.map((e, i) => [i + 1, formatDate(e.date), e.desc, e.payer, `Rs. ${e.amt.toFixed(2)}`]);
+        doc.text("EXPENSE DETAILS", 14, 40);
+        const tableData = expenses.map((e, i) => [i + 1, formatDate(e.date), e.desc.toUpperCase(), e.payer.toUpperCase(), `RS. ${e.amt.toFixed(2)}`]);
         doc.autoTable({
             startY: 45,
-            head: [['S.No', 'Date', 'Item', 'Name', 'Amount']],
+            head: [['S.NO', 'DATE', 'ITEM', 'NAME', 'AMOUNT']],
             body: tableData,
-            styles: { cellPadding: 3, fontSize: 9, valign: 'middle' },
+            styles: { cellPadding: 3, fontSize: 9, valign: 'middle', halign: 'center' },
             headStyles: { fillColor: [0, 86, 150] },
         });
 
-        // Section 2: Settlement Plan
         const finalY = doc.lastAutoTable.finalY + 15;
-        doc.text("Settlement Plan", 14, finalY);
+        doc.text("SETTLEMENT PLAN", 14, finalY);
         
         let settleData = [];
         const total = expenses.reduce((s, e) => s + e.amt, 0);
@@ -227,7 +257,7 @@
         let i = 0, j = 0;
         while(i < debtors.length && j < creditors.length) {
             let pay = Math.min(Math.abs(debtors[i].net), creditors[j].net);
-            settleData.push([debtors[i].name, creditors[j].name, `Rs. ${pay.toFixed(2)}`]);
+            settleData.push([debtors[i].name.toUpperCase(), creditors[j].name.toUpperCase(), `RS. ${pay.toFixed(2)}`]);
             debtors[i].net += pay; creditors[j].net -= pay;
             if(Math.abs(debtors[i].net) < 0.01) i++;
             if(Math.abs(creditors[j].net) < 0.01) j++;
@@ -236,19 +266,21 @@
         if (settleData.length > 0) {
             doc.autoTable({
                 startY: finalY + 5,
-                head: [['From', 'To', 'Amount']],
+                head: [['FROM', 'TO', 'AMOUNT']],
                 body: settleData,
-                styles: { cellPadding: 3, fontSize: 9 },
+                styles: { cellPadding: 3, fontSize: 9, halign: 'center' },
                 headStyles: { fillColor: [16, 172, 132] },
             });
         } else {
-            doc.text("All balances settled. No payments required.", 14, finalY + 10);
+            doc.text("ALL BALANCES SETTLED. NO PAYMENTS REQUIRED.", 14, finalY + 10);
         }
 
-        doc.save("MoneySplit_Report.pdf");
+        doc.save(`MONEYSPLIT_REPORT_${dateStr}.pdf`);
     }
 
-    function resetAll() { if(confirm('Clear all?')) { buddies = []; expenses = []; updateUI(); } }
+    function resetAll() { if(confirm('ARE YOU SURE YOU WANT TO CLEAR ALL DATA? THIS ACTION CANNOT BE UNDONE.')) { buddies = []; expenses = []; saveAndUI(); } }
+    
+    updateUI();
 </script>
 </body>
 </html>
